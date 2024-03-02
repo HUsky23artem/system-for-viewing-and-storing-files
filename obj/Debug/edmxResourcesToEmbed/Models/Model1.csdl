@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Files_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Table_Image_Files">
+    <Key>
+      <PropertyRef Name="id_image" />
+    </Key>
+    <Property Name="id_image" Type="Int32" Nullable="false" />
+    <Property Name="name_image" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="link_image_files" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Table_Files" Relationship="Self.FK_Table_Files_Table_Image_Files" FromRole="Table_Image_Files" ToRole="Table_Files" />
+  </EntityType>
+  <EntityType Name="Table_PDF_Files">
+    <Key>
+      <PropertyRef Name="id_pdf" />
+    </Key>
+    <Property Name="id_pdf" Type="Int32" Nullable="false" />
+    <Property Name="name_pdf" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="link_pdf_file" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Table_Files" Relationship="Self.FK_Table_Files_Table_PDF_Files" FromRole="Table_PDF_Files" ToRole="Table_Files" />
+  </EntityType>
+  <EntityType Name="Table_Files">
+    <Key>
+      <PropertyRef Name="id_table_files" />
+    </Key>
+    <Property Name="id_table_files" Type="Int32" Nullable="false" />
+    <Property Name="id_Files" Type="Int32" />
+    <NavigationProperty Name="Table_Image_Files" Relationship="Self.FK_Table_Files_Table_Image_Files" FromRole="Table_Files" ToRole="Table_Image_Files" />
+    <NavigationProperty Name="Table_PDF_Files" Relationship="Self.FK_Table_Files_Table_PDF_Files" FromRole="Table_Files" ToRole="Table_PDF_Files" />
+  </EntityType>
+  <Association Name="FK_Table_Files_Table_Image_Files">
+    <End Role="Table_Image_Files" Type="Self.Table_Image_Files" Multiplicity="0..1" />
+    <End Role="Table_Files" Type="Self.Table_Files" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Table_Image_Files">
+        <PropertyRef Name="id_image" />
+      </Principal>
+      <Dependent Role="Table_Files">
+        <PropertyRef Name="id_Files" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Table_Files_Table_PDF_Files">
+    <End Role="Table_PDF_Files" Type="Self.Table_PDF_Files" Multiplicity="0..1" />
+    <End Role="Table_Files" Type="Self.Table_Files" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Table_PDF_Files">
+        <PropertyRef Name="id_pdf" />
+      </Principal>
+      <Dependent Role="Table_Files">
+        <PropertyRef Name="id_Files" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Files_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Table_Image_Files" EntityType="Self.Table_Image_Files" />
+    <EntitySet Name="Table_PDF_Files" EntityType="Self.Table_PDF_Files" />
+    <EntitySet Name="Table_Files" EntityType="Self.Table_Files" />
+    <AssociationSet Name="FK_Table_Files_Table_Image_Files" Association="Self.FK_Table_Files_Table_Image_Files">
+      <End Role="Table_Image_Files" EntitySet="Table_Image_Files" />
+      <End Role="Table_Files" EntitySet="Table_Files" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Table_Files_Table_PDF_Files" Association="Self.FK_Table_Files_Table_PDF_Files">
+      <End Role="Table_PDF_Files" EntitySet="Table_PDF_Files" />
+      <End Role="Table_Files" EntitySet="Table_Files" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
